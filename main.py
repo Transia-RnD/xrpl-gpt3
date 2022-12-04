@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from typing import List
+from typing import List, Dict, Any
 import discord
 import os
 import openai
@@ -10,9 +10,7 @@ load_dotenv()
 
 openai.api_key = os.environ['OPENAPI_KEY']
 
-message_list: List[str] = [
-    'For the non tech savy people what is a git ?',
-]
+message_list: List[Dict[str, Any]] = []
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -45,6 +43,9 @@ class MyClient(discord.Client):
             presence_penalty=0.6
         )
         response_text: str = response.choices[0]['text']
+        dict_response: Dict[str, Any] = {
+            f'{message.author.name}': response_text
+        }
         message_list.append(response_text)
         await message.channel.send(response_text)
 
@@ -63,8 +64,8 @@ class MyClient(discord.Client):
         message_list.append(response_text)
         await message.channel.send(response_text)
 
-    async def handle_anology_gpt3(self, message):
-        _prompt: str = message.clean_content.split('anology! ')[-1].strip()
+    async def handle_analogy_gpt3(self, message):
+        _prompt: str = message.clean_content.split('analogy! ')[-1].strip()
         prompt = 'Create an analogy for this phrase: ' + _prompt
         response = openai.Completion.create(
             model="text-davinci-003",
@@ -99,17 +100,19 @@ class MyClient(discord.Client):
     async def handle_coded_gpt3(self, message):
         print('HANDLE: CODE')
         # strip mentions
-        # add coding preficits
+        dict_prompt: Dict[str, Any] = {
+            f'{message.author.name}': response_text
+        }
         prompt: str = message.clean_content.split('code! ')[-1].strip()
         print(prompt)
         response = openai.Completion.create(
-          model="code-davinci-002",
-          prompt=prompt,
-          temperature=0,
-          max_tokens=256,
-          top_p=1,
-          frequency_penalty=0,
-          presence_penalty=0
+            model="code-davinci-002",
+            prompt=prompt,
+            temperature=0,
+            max_tokens=60,
+            top_p=1,
+            frequency_penalty=0.5,
+            presence_penalty=0,
         )
         response_text: str = response.choices[0]['text']
         await message.channel.send(response_text)
@@ -133,19 +136,31 @@ class MyClient(discord.Client):
 
     async def on_message(self, message):
         # don't respond to ourselves
+        # print(message.channel.id)
         if message.author == self.user:
             return
 
         # dont respond to direct messages
         if not message.channel.guild:
+            print('DIRECT MESSAGE')
+            print(message.clean_content)
             return
+            
+
+        # if message.reference is not None:
+        #     print('MESSAGE REPLY')
+        #     print(message.reference.from_message())
+        #     return
+
+        # print('FIRST MESSAGE')
+        # return
 
         mention_names: List[str] = [message.name for message in message.mentions]
         if 'dangell7' in mention_names:    
             await self.handle_mention_dangell7(message)
         
         if message.content.startswith('code!'):
-            await self.handle_coded_gpt3(message)
+            await self.handle_coded_gpt3(message, )
 
         if message.content.startswith('gpt3!'):
             await self.handle_nlp_gpt3(message)
@@ -156,11 +171,12 @@ class MyClient(discord.Client):
         if message.content.startswith('story!'):
             await self.handle_story_gpt3(message)
 
-        if message.content.startswith('anology!'):
-            await self.handle_anology_gpt3(message)
+        if message.content.startswith('analogy!'):
+            await self.handle_analogy_gpt3(message)
 
         if message.content == 'ping':
             await message.channel.send('pong')
+
 
 
 intents = discord.Intents.default()
