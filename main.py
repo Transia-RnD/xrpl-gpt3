@@ -35,12 +35,11 @@ class MyClient(discord.Client):
 
     async def handle_nlp_gpt3(self, message):
         prompt: str = message.clean_content.split('gpt3! ')[-1].strip()
-        print(prompt)
         response = openai.Completion.create(
             model="text-davinci-003",
-            prompt=message.clean_content,
+            prompt=prompt,
             temperature=0.9,
-            max_tokens=150,
+            max_tokens=250,
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0.6
@@ -49,19 +48,52 @@ class MyClient(discord.Client):
         message_list.append(response_text)
         await message.channel.send(response_text)
 
-    def classify(self, prompt: str):
-        # strip mentions
+    async def handle_story_gpt3(self, message):
+        prompt: str = message.clean_content.split('story! ')[-1].strip()
         response = openai.Completion.create(
             model="text-davinci-003",
             prompt=prompt,
-            temperature=0,
+            temperature=0.8,
+            max_tokens=60,
+            top_p=1,
+            frequency_penalty=0.5,
+            presence_penalty=0
+        )
+        response_text: str = response.choices[0]['text']
+        message_list.append(response_text)
+        await message.channel.send(response_text)
+
+    async def handle_anology_gpt3(self, message):
+        _prompt: str = message.clean_content.split('anology! ')[-1].strip()
+        prompt = 'Create an analogy for this phrase: ' + _prompt
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=prompt,
+            temperature=0.5,
             max_tokens=60,
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0
         )
         response_text: str = response.choices[0]['text']
-        return response_text == 'Positive'
+        message_list.append(response_text)
+        await message.channel.send(response_text)
+
+    async def handle_marv_gpt3(self, message):
+        _prompt: str = message.clean_content.split('marv! ')[-1].strip()
+        prompt = 'Marv is a chatbot that reluctantly answers questions with sarcastic responses:. ' + _prompt
+        response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=prompt,
+            temperature=0.5,
+            max_tokens=60,
+            top_p=0.3,
+            frequency_penalty=0.5,
+            presence_penalty=0
+        )
+        response_text: str = response.choices[0]['text']
+        message_list.append(response_text)
+        await message.channel.send(response_text)
 
 
     async def handle_coded_gpt3(self, message):
@@ -114,8 +146,18 @@ class MyClient(discord.Client):
         
         if message.content.startswith('code!'):
             await self.handle_coded_gpt3(message)
+
         if message.content.startswith('gpt3!'):
             await self.handle_nlp_gpt3(message)
+
+        if message.content.startswith('marv!'):
+            await self.handle_marv_gpt3(message)
+
+        if message.content.startswith('story!'):
+            await self.handle_story_gpt3(message)
+
+        if message.content.startswith('anology!'):
+            await self.handle_anology_gpt3(message)
 
         if message.content == 'ping':
             await message.channel.send('pong')
