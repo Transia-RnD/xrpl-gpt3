@@ -16,8 +16,8 @@ class MyClient(discord.Client):
     async def on_ready(self):
         print('Logged on as', self.user)
 
-    async def handle_mention_dangell7(self, message):
-        from_message: str = message.clean_content.split('@dangell7')[-1].strip()
+    async def handle_mention_me(self, message):
+        from_message: str = message.clean_content.split('@xrpl-gpt3')[-1].strip()
         response = openai.Completion.create(
             model="text-davinci-003",
             prompt=from_message,
@@ -156,8 +156,8 @@ class MyClient(discord.Client):
         # return
 
         mention_names: List[str] = [message.name for message in message.mentions]
-        if 'dangell7' in mention_names:    
-            await self.handle_mention_dangell7(message)
+        if 'xrpl-gpt3' in mention_names:    
+            await self.handle_mention_me(message)
         
         if message.content.startswith('code!'):
             await self.handle_coded_gpt3(message, )
