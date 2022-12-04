@@ -28,7 +28,7 @@ class MyClient(discord.Client):
             presence_penalty=0.6
         )
         response_text: str = response.choices[0]['text']
-        message_list.append(response_text)
+        # message_list.append(response_text)
         await message.channel.send(response_text)
 
     async def handle_nlp_gpt3(self, message):
@@ -43,10 +43,10 @@ class MyClient(discord.Client):
             presence_penalty=0.6
         )
         response_text: str = response.choices[0]['text']
-        dict_response: Dict[str, Any] = {
-            f'{message.author.name}': response_text
-        }
-        message_list.append(response_text)
+        # dict_response: Dict[str, Any] = {
+        #     f'{message.author.name}': response_text
+        # }
+        # message_list.append(response_text)
         await message.channel.send(response_text)
 
     async def handle_story_gpt3(self, message):
@@ -61,7 +61,7 @@ class MyClient(discord.Client):
             presence_penalty=0
         )
         response_text: str = response.choices[0]['text']
-        message_list.append(response_text)
+        # message_list.append(response_text)
         await message.channel.send(response_text)
 
     async def handle_analogy_gpt3(self, message):
@@ -77,7 +77,7 @@ class MyClient(discord.Client):
             presence_penalty=0
         )
         response_text: str = response.choices[0]['text']
-        message_list.append(response_text)
+        # message_list.append(response_text)
         await message.channel.send(response_text)
 
     async def handle_marv_gpt3(self, message):
@@ -93,18 +93,18 @@ class MyClient(discord.Client):
             presence_penalty=0
         )
         response_text: str = response.choices[0]['text']
-        message_list.append(response_text)
+        # message_list.append(response_text)
         await message.channel.send(response_text)
 
 
     async def handle_coded_gpt3(self, message):
         print('HANDLE: CODE')
         # strip mentions
-        dict_prompt: Dict[str, Any] = {
-            f'{message.author.name}': response_text
-        }
+        # dict_prompt: Dict[str, Any] = {
+        #     f'{message.author.name}': response_text
+        # }
         prompt: str = message.clean_content.split('code! ')[-1].strip()
-        print(prompt)
+        # print(prompt)
         response = openai.Completion.create(
             model="code-davinci-002",
             prompt=prompt,
