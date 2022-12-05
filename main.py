@@ -168,16 +168,20 @@ class MyClient(discord.Client):
         except Exception as e:
             await message.channel.send(str(e))
 
-    async def handle_tldr(self, message):
+    async def handle_tldr(self, message, is_reply: bool = False):
         try:
             print('handle_tldr')
+            print(f'is_reply: {is_reply}')
             async with message.channel.typing():
                 cat_message: str = ''
-                async for msg in message.channel.history(limit=30):
-                    cat_message += msg.clean_content + ' '
 
-                cat_message += '\n'
-                cat_message+= 'Tl;dr'
+                if not is_reply:
+                    async for msg in message.channel.history(limit=30):
+                        cat_message += msg.clean_content + ' '
+                else:
+                    cat_message += message.reference.cached_message.clean_content
+
+                cat_message+= 'Tl;dr:'
                 
                 print(f'MESSAGE: {cat_message}')
                 response = openai.Completion.create(
@@ -231,6 +235,26 @@ class MyClient(discord.Client):
         # dont respond to direct messages
         if not message.channel.guild:
             print('DIRECT MESSAGE')
+            return
+
+        # Message has reply and can get reply message (cant get reply messages if not in cache)
+        if message.reference and message.reference.cached_message:
+            if message.content.startswith('code!'):
+                await self.handle_coded_gpt3(message)
+
+            if message.content.startswith('gpt3!'):
+                await self.handle_nlp_gpt3(message)
+
+            if message.content.startswith('analogy!'):
+                await self.handle_analogy_gpt3(message)
+
+            if message.content.startswith('tldr!'):
+                await self.handle_tldr(message, True)
+
+            if message.content.startswith('op!'):
+                await self.handle_op(message)
+            
+            # stop process
             return
 
         mention_names: List[str] = [message.name for message in message.mentions]
