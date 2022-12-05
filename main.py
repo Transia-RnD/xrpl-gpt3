@@ -21,7 +21,7 @@ class MyClient(discord.Client):
             print('handle_mention_me')
             async with message.channel.typing():
                 print(f'MESSAGE: {message.clean_content}')
-                from_message: str = message.clean_content.split('@xrpl-gpt3')[-1].strip()
+                from_message = message.clean_content.replace('@xrpl-gpt3', '')
                 _prompt = 'Human: ' + from_message
                 prompt = 'Jarvis is a xrpl and rippled decentralized ledger technology developer chatbot that will answer non xrpl questions with sarcastic responses: ' + _prompt
                 response = openai.Completion.create(

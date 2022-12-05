@@ -1,6 +1,6 @@
 # XRPL-GPT3
 
-This is the readme for a discord bot. 
+I'm a discord bot.
 
 ## Functions
 
