@@ -120,6 +120,9 @@ class MyClient(discord.Client):
                 cat_message: str = ''
                 async for msg in message.channel.history(limit=30):
                     cat_message += msg.clean_content + ' '
+
+                cat_message += '\n'
+                cat_message+= 'Tl;dr'
                 
                 print(f'MESSAGE: {cat_message}')
                 response = openai.Completion.create(
