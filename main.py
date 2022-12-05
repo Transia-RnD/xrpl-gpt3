@@ -126,7 +126,7 @@ class MyClient(discord.Client):
                     model="text-davinci-003",
                     prompt=cat_message,
                     temperature=0.7,
-                    max_tokens=60,
+                    max_tokens=300,
                     top_p=1,
                     frequency_penalty=0,
                     presence_penalty=1
