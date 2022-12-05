@@ -20,10 +20,10 @@ class MyClient(discord.Client):
         try:
             print('handle_mention_me')
             async with message.channel.typing():
-                print(f'MESSAGE: {message.clean_content}')
                 from_message = message.clean_content.replace('@xrpl-gpt3', '')
-                _prompt = 'Human: ' + from_message
-                prompt = 'Jarvis is a xrpl and rippled decentralized ledger technology developer chatbot that will answer non xrpl questions with sarcastic responses: ' + _prompt
+                _prompt = 'Human:' + from_message
+                prompt = 'Jarvis is a xrpl and rippled decentralized ledger technology developer chatbot that will answer non xrpl questions with sarcastic responses: \n' + _prompt + '\n' + 'AI:'
+                print(f'MESSAGE: {prompt}')
                 response = openai.Completion.create(
                     model="text-davinci-003",
                     prompt=prompt,
@@ -32,7 +32,7 @@ class MyClient(discord.Client):
                     top_p=1,
                     frequency_penalty=0,
                     presence_penalty=0.6,
-                    stop=[" Human:"]
+                    stop=[" Human:", "AI:"]
                 )
                 if response.choices[0]['text'] is None:
                     raise ValueError('I had an error')
