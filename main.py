@@ -163,6 +163,9 @@ class MyClient(discord.Client):
         if message.content.startswith('analogy!'):
             await self.handle_analogy_gpt3(message)
 
+        if message.content.startswith('analogy!'):
+            await self.handle_tldr(message)
+
         if message.content == 'ping':
             await message.channel.send('pong')
 
