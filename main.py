@@ -34,7 +34,6 @@ class MyClient(discord.Client):
                     presence_penalty=0.6,
                     stop=[" Human:"]
                 )
-                print(response)
                 if response.choices[0]['text'] is None:
                     raise ValueError('I had an error')
                 
@@ -59,7 +58,6 @@ class MyClient(discord.Client):
                     frequency_penalty=0,
                     presence_penalty=0.6
                 )
-                print(response)
                 if response.choices[0]['text'] is None:
                     raise ValueError('I had an error')
                 
@@ -84,7 +82,6 @@ class MyClient(discord.Client):
                     frequency_penalty=0,
                     presence_penalty=0
                 )
-                print(response)
                 if response.choices[0]['text'] is None:
                     raise ValueError('I had an error')
                 
@@ -103,12 +100,11 @@ class MyClient(discord.Client):
                     model="code-davinci-002",
                     prompt=prompt,
                     temperature=0,
-                    max_tokens=300,
+                    max_tokens=400,
                     top_p=1,
                     frequency_penalty=0.5,
                     presence_penalty=0,
                 )
-                print(response)
                 if response.choices[0]['text'] is None:
                     raise ValueError('I had an error')
                 
@@ -135,7 +131,6 @@ class MyClient(discord.Client):
                     frequency_penalty=0,
                     presence_penalty=1
                 )
-                print(response)
                 if response.choices[0]['text'] is None:
                     raise ValueError('I had an error')
                 
@@ -153,7 +148,6 @@ class MyClient(discord.Client):
         # dont respond to direct messages
         if not message.channel.guild:
             print('DIRECT MESSAGE')
-            print(message.clean_content)
             return
 
         mention_names: List[str] = [message.name for message in message.mentions]
