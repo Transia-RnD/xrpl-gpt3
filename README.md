@@ -1,20 +1,45 @@
+# XRPL-GPT3
 
-### Configure Google Cloud account:
-```
-gcloud config configurations create metaxrplorer
-gcloud config set account dangell@transia.co
-gcloud config set project metaxrplorer
-```
+This is the readme for a discord bot. 
 
-`gcloud config configurations list`
+## Functions
 
-`gcloud config configurations activate metaxrplorer`
+### `@ User`
 
+Invoke: `@xrpl-gpt3`
 
+Prepended Text: `Jarvis is a xrpl and rippled decentralized ledger technology developer chatbot that will answer non xrpl questions with sarcastic responses: `
 
-gcloud beta run deploy xrpl-gpt3 \
---image=gcr.io/metaxrplorer/xrpl-gpt3:latest \
---platform=managed \
---region=us-central1 \
---project=metaxrplorer \
---service-account=firebase-devsdk@metaxrplorer.iam.gserviceaccount.com
+Algorithm: `text-davinci-003`
+
+### `GPT3 Standard`
+
+Invoke: `gpt3!`
+
+Prepended Text: None
+
+Algorithm: `text-davinci-003`
+
+### `GPT3 Coding`
+
+Invoke: `code!`
+
+Prepended Text: None
+
+Algorithm: `code-davinci-002`
+
+### `GPT3 Analogy`
+
+Invoke: `analogy!`
+
+Prepended Text: `Create an analogy for this phrase: `
+
+Algorithm: `text-davinci-003`
+
+### `GPT3 Tl;dr`
+
+Invoke: `tldr!`
+
+Prepended Text: The last 30 messages in the thread
+
+Algorithm: `text-davinci-003`
