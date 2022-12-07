@@ -256,13 +256,13 @@ class MyClient(discord.Client):
             print('DIRECT MESSAGE')
             if message.content.startswith('code!'):
                 await self.handle_coded_gpt3(message)
-            
-            if message.content.startswith('gpt3!'):
-                await self.handle_nlp_gpt3(message)
+                return
             
             if message.content.startswith('translate!'):
                 await self.handle_translate_gpt3(message)
+                return
             
+            await self.handle_nlp_gpt3(message)
             # stop process
             return
 
