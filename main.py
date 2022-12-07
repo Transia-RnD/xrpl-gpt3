@@ -226,6 +226,24 @@ class MyClient(discord.Client):
         except Exception as e:
             await message.channel.send(str(e))
 
+    async def handle_image(self, message):
+        try:
+            print('handle_coded_op')
+            async with message.channel.typing():
+                _prompt: str = message.clean_content.split('op! ')[-1].strip()
+                prompt = 'Classify the sentiment in this message: ' + _prompt
+                print(f'MESSAGE: {prompt}')
+                response = openai.Image.create(
+                    prompt="a white siamese cat",
+                    n=1,
+                    size="1024x1024"
+                )
+                image_url = response['data'][0]['url']
+                print(image_url)
+                await message.channel.send(image_url)
+        except Exception as e:
+            await message.channel.send(str(e))
+
     async def on_message(self, message):
         # don't respond to ourselves
         print(message)
@@ -236,6 +254,16 @@ class MyClient(discord.Client):
         # dont respond to direct messages
         if not message.channel.guild:
             print('DIRECT MESSAGE')
+            if message.content.startswith('code!'):
+                await self.handle_coded_gpt3(message)
+            
+            if message.content.startswith('gpt3!'):
+                await self.handle_nlp_gpt3(message)
+            
+            if message.content.startswith('translate!'):
+                await self.handle_translate_gpt3(message)
+            
+            # stop process
             return
 
         # Message has reply and can get reply message (cant get reply messages if not in cache)
@@ -255,7 +283,7 @@ class MyClient(discord.Client):
             if message.content.startswith('tldr!'):
                 await self.handle_tldr(message, r_message)
 
-            #  stop process
+            # stop process
             return
 
         mention_names: List[str] = [message.name for message in message.mentions]
@@ -264,7 +292,7 @@ class MyClient(discord.Client):
             await self.handle_mention_me(message)
         
         if message.content.startswith('code!'):
-            await self.handle_coded_gpt3(message, )
+            await self.handle_coded_gpt3(message)
 
         if message.content.startswith('gpt3!'):
             await self.handle_nlp_gpt3(message)
@@ -278,8 +306,10 @@ class MyClient(discord.Client):
         if message.content.startswith('op!'):
             await self.handle_op(message)
 
+        if message.content.startswith('image!'):
+            await self.handle_image(message)
+
         if 'translate!' in message.clean_content:
-            print('TRANSLATE')
             await self.handle_translate_gpt3(message)
 
         if message.content == 'ping':
