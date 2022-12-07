@@ -230,11 +230,10 @@ class MyClient(discord.Client):
         try:
             print('handle_coded_op')
             async with message.channel.typing():
-                _prompt: str = message.clean_content.split('op! ')[-1].strip()
-                prompt = 'Classify the sentiment in this message: ' + _prompt
+                prompt: str = message.clean_content.split('image! ')[-1].strip()
                 print(f'MESSAGE: {prompt}')
                 response = openai.Image.create(
-                    prompt="a white siamese cat",
+                    prompt=prompt,
                     n=1,
                     size="1024x1024"
                 )
