@@ -228,7 +228,7 @@ class MyClient(discord.Client):
 
     async def handle_image(self, message):
         try:
-            print('handle_coded_op')
+            print('handle_image')
             async with message.channel.typing():
                 prompt: str = message.clean_content.split('image! ')[-1].strip()
                 print(f'MESSAGE: {prompt}')
@@ -238,7 +238,6 @@ class MyClient(discord.Client):
                     size="1024x1024"
                 )
                 image_url = response['data'][0]['url']
-                print(image_url)
                 await message.channel.send(image_url)
         except Exception as e:
             await message.channel.send(str(e))
